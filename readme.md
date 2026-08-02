@@ -39,12 +39,6 @@ wsl
 
 Projeto Final
 
-Desenvolvendo sua Carteira de Investimentos Inteligente com Rust
-https://web.dio.me/project/desenvolvendo-sua-carteira-de-investimentos-inteligente-com-rust/learning/f9e5990c-2776-465d-8964-b5b115a8bc5b?back=/track/santander-2026-rust-fullstack&tab=undefined&moduleId=undefined
-
-video 1:
-https://www.youtube.com/watch?v=Fyv0zgZgYg4
-
 🧠 Desenvolvimento do projeto: ordem das aulas
 1️⃣ Primeiros passos com o Axum
 API REST para cadastro, listagem e atualização de ativos
