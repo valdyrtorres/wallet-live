@@ -14,3 +14,15 @@ cargo add serde_json
 cargo add serde --features derive
 
 cargo check
+
+curl --request POST \
+  --url http://localhost:3000/api/assets \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "name": "Bitcoin",
+  "unit_value": 10
+}'
+
+curl --request GET \
+  --url http://localhost:3000/api/assets \
+  --header 'Content-Type: multipart/form-data'

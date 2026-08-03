@@ -5,6 +5,7 @@ use tokio::{net::TcpListener, sync::Mutex};
 use tracing::info;
 use tracing_subscriber::{Layer, fmt::format::FmtSpan, layer::SubscriberExt, util::SubscriberInitExt};
 
+use crate::models::Asset;
 use crate::routes;
 
 #[derive(Clone)]
