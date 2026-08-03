@@ -1,0 +1,16 @@
+cargo new wallet-live
+cargo add axum --features macros
+cargo add tokio --features rt-multi-thread,macros
+
+cargo doc --open
+
+curl http://localhost:3000/ -w '%{http_code}'
+
+cargo add color_eyre
+cargo add tracing tracing-subscriber
+
+cargo clippy
+cargo add serde_json
+cargo add serde --features derive
+
+cargo check
