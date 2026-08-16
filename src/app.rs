@@ -39,7 +39,8 @@ impl App {
         let state = AppState::new().await?;
 
         let listener = TcpListener::bind("0.0.0.0:3000").await.unwrap();
-        let router = Router::new()  
+        let router = Router::new()
+            .merge(routes::frontend::router())
             .nest("/api", routes::api::router())
             .with_state(state);
 
