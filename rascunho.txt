@@ -26,3 +26,29 @@ curl --request POST \
 curl --request GET \
   --url http://localhost:3000/api/assets \
   --header 'Content-Type: multipart/form-data'
+
+cargo add password-auth
+cargo add axum-extra
+cargo add jwt-simple
+
+cargo add thiserror
+
+cargo add sqlx --features macros,postgres,runtime-tokio
+
+cargo install sqlx-cli --locked
+cargo sqlx migrate add --timestamp -r create_assets
+
+Parei 8:20 do 3o. video
+
+docker compose up
+cargo sqlx migrate run
+cargo sqlx migrate info
+cargo sqlx migrate revert
+cargo sqlx migrate run
+
+pgcli postgres://wallet_user:wallet_password@localhost:5432/postgres
+
+cargo add dotenvy
+cargo add insta --dev --features json
+cargo install cargo-insta
+cargo insta review
