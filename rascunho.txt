@@ -52,3 +52,12 @@ cargo add dotenvy
 cargo add insta --dev --features json
 cargo install cargo-insta
 cargo insta review
+
+video 4
+cargo sqlx migrate add create_users
+cargo sqlx migrate run
+
+Parei 12:20 do 4o. video
+
+cargo add password-auth
+cargo add askama --features derive
