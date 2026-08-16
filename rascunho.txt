@@ -48,6 +48,8 @@ cargo sqlx migrate run
 
 pgcli postgres://wallet_user:wallet_password@localhost:5432/postgres
 
+pgcli postgres://wallet_user:wallet_password@localhost:5432/wallet_db
+
 cargo add dotenvy
 cargo add insta --dev --features json
 cargo install cargo-insta
@@ -61,3 +63,5 @@ Parei 12:20 do 4o. video
 
 cargo add password-auth
 cargo add askama --features derive
+
+cargo add axum-extra --features cookie-signed

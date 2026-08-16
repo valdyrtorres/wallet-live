@@ -1,6 +1,6 @@
 use axum::Router;
 
-use sqlx::{PgPool};
+use sqlx::PgPool;
 use tokio::net::TcpListener;
 use tracing::info;
 use tracing_subscriber::{
@@ -16,11 +16,13 @@ pub struct AppState {
 
 impl AppState {
     async fn new() -> color_eyre::Result<Self> {
+        dotenvy::dotenv().ok();
+
         let database_url = std::env::var("DATABASE_URL")?;
-        let db= PgPool::connect(&database_url).await?;
-        Ok(Self {
-            db
-        })
+        let db = PgPool::connect(&database_url).await?;
+        sqlx::migrate!("./migrations").run(&db).await?;
+
+        Ok(Self { db })
     }
 }
 
