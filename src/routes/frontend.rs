@@ -17,6 +17,8 @@ pub fn router() -> Router<AppState> {
     Router::new()
         .route("/", get(index))
         .route("/login", get(login_page).post(login))
+        .route("/assets", get(assets).post(purchase_asset))
+        .route("/logout", get(logout))
 }
 
 #[derive(Template)]
@@ -122,7 +124,7 @@ pub mod filters {
     #[askama::filter_fn]
     pub fn human_datetime(
         datetime: &OffsetDateTime,
-        _env: &dyn askama::Value,
+        _values: &dyn askama::Values,
     ) -> askama::Result<String> {
         const HUMAN_READABLE_FORMAT: StaticFormatDescription =
             format_description!(version = 2, "[year]-[month]-[day] [hour]:[minute]");

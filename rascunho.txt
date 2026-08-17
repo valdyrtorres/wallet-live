@@ -80,3 +80,13 @@ cargo sqlx migrate run
 
 -- Para resolver o try_join
 cargo add futures 
+
+------------
+Criando massa em assets:
+
+INSERT INTO assets (name, unit_value) VALUES
+('Bitcoin', 65000.00),
+('Ethereum', 3200.00),
+('Dólar', 1.00),
+('Real', 0.20);
+

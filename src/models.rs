@@ -1,5 +1,4 @@
 use serde::{Deserialize, Serialize};
-use sqlx::types::Json;
 use time::OffsetDateTime;
 
 #[derive(Serialize, Clone)]
@@ -15,7 +14,7 @@ pub struct UserRecord {
     pub password_hash: String,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone)]
 pub struct PurchaseHistory {
     #[serde(with = "time::serde::iso8601")]
     pub bought_at: OffsetDateTime,
@@ -31,5 +30,5 @@ pub struct OwnedAsset {
     pub unit_value: f64,
     pub value_delta: f64,
     pub quantity_owned: f64,
-    pub purchase_history: Json<Vec<PurchaseHistory>>,
+    pub purchase_history: Vec<PurchaseHistory>,
 }

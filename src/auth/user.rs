@@ -60,7 +60,7 @@ impl User {
         Self { id, username }
     }
 
-    pub const fn username(&self) -> &String {
+    pub fn username(&self) -> &str {
         &self.username
     }
 

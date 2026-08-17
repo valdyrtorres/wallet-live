@@ -1,11 +1,12 @@
 use std::convert::Infallible;
 
 use axum::extract::FromRequestParts;
-use sqlx::PgPool;
+use serde_json::Value;
+use sqlx::{PgPool, Row};
 
 use crate::{
     app::AppState,
-    models::{Asset, UserRecord, OwnedAsset},
+    models::{Asset, OwnedAsset, UserRecord},
 };
 
 pub struct Repository {
@@ -83,33 +84,60 @@ impl Repository {
     }
 
     pub async fn list_owned_assets(&self, user_id: i64) -> sqlx::Result<Vec<OwnedAsset>> {
-        sqlx::query_as!(
-            OwnedAsset,
+        let rows = sqlx::query(
             r#"
             SELECT
                 a.id,
                 a.name,
                 a.unit_value,
-                SUM((a.unit_value - o.bought_for) * o.quantity_owned) AS "value_delta!",
-                SUM(o.quantity_owned) AS "quantity_owned!",
-                JSON_AGG(
-                    JSON_BUILD_OBJECT(
-                        'bought_at', o.timestamp,
-                        'bought_for', o.bought_for,
-                        'quantity_bought', o.quantity_owned,
-                        'value_delta', (a.unit_value - o.bought_for) * o.quantity_owned
-                    )
-                ) AS "purchase_history!: -"
+                COALESCE(SUM((a.unit_value - o.bought_for) * o.quantity_owned), 0.0) AS value_delta,
+                COALESCE(SUM(o.quantity_owned), 0.0) AS quantity_owned,
+                COALESCE(
+                    JSON_AGG(
+                        JSON_BUILD_OBJECT(
+                            'bought_at', o.timestamp,
+                            'bought_for', o.bought_for,
+                            'quantity_bought', o.quantity_owned,
+                            'value_delta', (a.unit_value - o.bought_for) * o.quantity_owned
+                        )
+                    ) FILTER (WHERE o.id IS NOT NULL),
+                    '[]'::json
+                ) AS purchase_history
             FROM assets AS a
-            JOIN owned_assets AS o
-            ON o.asset_id = a.id
+            LEFT JOIN owned_assets AS o
+            ON o.asset_id = a.id AND o.user_id = $1
             WHERE o.user_id = $1
-            GROUP BY a.id
+            GROUP BY a.id, a.name, a.unit_value
             "#,
-            user_id
         )
+        .bind(user_id)
         .fetch_all(&self.db)
-        .await
+        .await?;
+
+        let mut owned_assets = Vec::with_capacity(rows.len());
+
+        for row in rows {
+            let id: i64 = row.try_get("id")?;
+            let name: String = row.try_get("name")?;
+            let unit_value: f64 = row.try_get("unit_value")?;
+            let value_delta: f64 = row.try_get("value_delta")?;
+            let quantity_owned: f64 = row.try_get("quantity_owned")?;
+            let purchase_history_json: Value = row.try_get("purchase_history")?;
+            let purchase_history: Vec<crate::models::PurchaseHistory> =
+                serde_json::from_value(purchase_history_json)
+                    .map_err(|err| sqlx::Error::Decode(Box::new(err)))?;
+
+            owned_assets.push(OwnedAsset {
+                id,
+                name,
+                unit_value,
+                value_delta,
+                quantity_owned,
+                purchase_history,
+            });
+        }
+
+        Ok(owned_assets)
     }
 
     pub async fn insert_owned_asset(
