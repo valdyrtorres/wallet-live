@@ -36,6 +36,7 @@ cargo add thiserror
 cargo add sqlx --features macros,postgres,runtime-tokio
 
 cargo install sqlx-cli --locked
+-- CRIANDO OS SQL's DE MIGRATION DE BANCO
 cargo sqlx migrate add --timestamp -r create_assets
 
 Parei 8:20 do 3o. video
@@ -56,6 +57,7 @@ cargo install cargo-insta
 cargo insta review
 
 video 4
+-- CRIANDO OS SQL's DE MIGRATION DE BANCO
 cargo sqlx migrate add create_users
 cargo sqlx migrate run
 
@@ -65,3 +67,16 @@ cargo add password-auth
 cargo add askama --features derive
 
 cargo add axum-extra --features cookie-signed
+
+-- TERMINANDO O APP DE CARTEIRA 6o. vídeo
+cargo add time --features serde
+
+-- CRIANDO OS SQL's DE MIGRATION DE BANCO
+cargo sqlx migrate add --timestamp -r create_owned_assets
+cargo sqlx migrate run
+
+cargo sqlx migrate add --timestamp -r create_purchase_history
+cargo sqlx migrate run
+
+-- Para resolver o try_join
+cargo add futures 
